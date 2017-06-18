@@ -1,0 +1,53 @@
+
+
+/*
+ If < 40% bodyfat
+	 Protein = 1.2 * LBM 
+ else 
+	Protein = 45% tdee
+ 
+ Fat = .3 * LBM ( )
+*/
+
+
+function calculateMacro(macroType) {
+	
+	switch(macroType) {
+		case (macroType == "protein") :
+		
+		// get protein input
+		$(".deficit input[name=='protein']")
+	
+		break;
+		
+		case (macroType == "fat") :
+	
+		break;
+		
+		case (macroType == "carbs") :
+
+		break;				
+		
+	}// end switch
+	
+}// end calculateMacro()
+
+
+function calculateFat() { 
+
+}// end calculateFat
+
+
+function calculateCarbs() { 
+
+}// end calculateCarbs
+
+
+
+
+function updateMacros() {
+	
+	
+	
+}// end updateMacros
+

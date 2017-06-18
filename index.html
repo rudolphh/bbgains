@@ -1,0 +1,773 @@
+
+
+<head>
+<title>BBGains.com: One Calculator for Bodyfat, Calories, and Macros.</title>
+<!-- JQuery -->
+
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/jquery-ui.min.js"></script>
+
+<!-- Design Scripts -->
+<script type="text/javascript" src="js/nouislider.min.js"></script>
+
+<!-- FROM MFL -->
+
+<script type="text/javascript" src="http://www.muscleforlife.com/wp-content/themes/mfl/theme/javascript/jquery-latest.min.js"></script>
+
+
+<!-- Stylesheets -->
+<link rel='stylesheet' id='mfl-macro-jquery-ui-styles-css'  href='http://www.muscleforlife.com/wp-content/plugins/custom-mfl/css/macro-jquery-ui.min.css?v=12' type='text/css' media='all' />
+<!--
+<link rel='stylesheet' id='mfl-tdee-macro-calculator-styles-css'  href='http://www.muscleforlife.com/wp-content/plugins/custom-mfl/css/mix.css?v=18' type='text/css' media='all' />
+-->
+
+<!-- My Stylesheets -->
+<link rel='stylesheet' id='mfl-mix-css'  href='css/mix.css' type='text/css' media='all' />
+<link rel='stylesheet' id='mfl-tdee-calculator-styles-css'  href='css/tdee-calculator.css' type='text/css' media='all' />
+<link rel='stylesheet' id='mfl-bf-calculator-styles-css'  href='css/bf-calculator.css' type='text/css' media='all' />
+
+<link rel="stylesheet" type="text/css" href="css/jquery.fullPage.css" />
+<link rel="stylesheet" type="text/css" href="css/nouislider.min.css" />
+
+
+<!-- Viewport Tag -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+
+<script type="text/javascript">
+
+// THIS NEEDS TO BE COMMENTED AND PUT IN ANOTHER .JS
+$(document).ready(function() {
+
+
+function saveGenderInputs(gender, height, weight, system) {
+	
+	gender.height(height);
+  	gender.weight(weight);
+	gender.system(system);
+}
+
+function setGenderInputs(gender) {
+	$(".bf-calculator #height").val(gender.height());
+  	$(".bf-calculator #weight").val(gender.weight());
+}
+
+
+function saveAndSwap(userChoice) {
+
+	var height = $(".bf-calculator input[name='height']").val();
+	var weight = $(".bf-calculator #weight").val();
+	var system = $(".bf-calculator input[name='system']").val();
+	
+  		if (userChoice == 'male'){
+  			
+  			//save female weight height if entered and set male weight height if saved previous
+  			if((height > 0) && (weight > 0)){
+  				saveGenderInputs(female, height, weight, system);
+  			}
+  			// either set the inputs with saved male inputs
+  			if (male.weight() && male.height()) {
+  				setGenderInputs(male);
+  			}
+  			else { // or just clear them
+  				$(".bf-calculator #height").val("");
+  				$(".bf-calculator #weight").val("");
+  			}
+  		}
+  		else {
+  			
+  			//save male weight height if entered and set female weight height if entered previous
+  			if((height > 0) && (weight > 0)){
+  				male.height($(".bf-calculator #height").val());
+  				male.weight($(".bf-calculator #weight").val());
+				male.system($(".bf-calculator input[name='system']").val());
+  			}
+  			if (female.weight() && female.height()) {
+  				$(".bf-calculator #height").val(female.height());
+  				$(".bf-calculator #weight").val(female.weight());
+
+  			}
+  			else {
+  				$(".bf-calculator #height").val("");
+  				$(".bf-calculator #weight").val("");
+  			}	
+ 		} 	
+ 		
+ 		updateTDEE();	
+ 		
+ 			
+}// end saveAndSwap
+
+	
+	    $(".bf-calculator button[name='gender']").click(function(event) {
+	    	
+	    	userChoice = $(this).val();
+	    	console.log(userChoice);
+	    	mElement = '#'+userChoice+'-measurements';// the measurement div we want to show
+	    	
+	    	$(this).fadeTo("slow", 1);
+	    	if($(this).val() == 'male'){
+	    		$(".bf-calculator button[value='female']").fadeTo("slow", 0.5);
+	    	}
+	    	else{ $(".bf-calculator button[value='male']").fadeTo("slow", 0.5); }
+	    	
+	    	if($(mElement).is(':hidden')){ 	
+
+	       	$('.measurements:visible').slideUp(200, function(){
+					saveAndSwap(userChoice);
+
+		    		$(mElement).slideDown(500);
+		    		updateBF();
+		    		
+	       	});
+			}
+	    	
+	    	event.preventDefault();
+	    	
+	    });// end click function
+	     
+	    
+	// initialize fullpage
+	
+    $('#fullpage').fullpage({
+        anchors:['bodyfat', 'tdee', 'macros'],
+        //autoScrolling: false,
+        controlArrows: false,
+        normalScrollElements: ".macro"
+        //resize: true
+
+    });
+    
+    
+	// initialize all sliders using nouislider
+    
+   
+   
+		$(".macro").each(function() {
+    		
+    		if ($(this).attr("name") == "fat"){
+				noUiSlider.create(this, {
+					start: [ 20 ],
+					orientation: "horizontal",
+					range: {
+						'min': [  0 ],
+						'max': [ 100 ]
+					}
+				});
+			}
+			else {
+				noUiSlider.create(this, {
+					start: [ 40 ],
+					range: {
+						'min': [  0 ],
+						'max': [ 100 ]
+					}
+				});
+			
+			}
+      
+      });
+      	
+  //  pinch to zoom with fullpage.js
+    var scale = 0.7; // initial-scale
+    var r = 0.10;
+
+    $(document).bind('gesturechange',function(event){
+
+        if(event.originalEvent.scale > 1) scale = scale < 1.2 ?  scale+r : 1.2 ;
+        else scale = scale > 0.7 ? scale-r : 0.7 ;
+
+        $('meta[name=viewport]').attr('content', 'width=device-width, minimum-scale='+ scale.toFixed(2) +', maximum-scale='+ scale.toFixed(2) +', user-scalable=yes'); // 
+
+    });
+    
+    
+    
+      
+	});// END DOC READY
+
+</script>
+
+</head>
+
+<body>
+
+<!-- Bodyfat Calculator -->
+
+
+<div id="fullpage">
+
+<div class="section">
+<div class="bf-calculator"><strong>
+  <form class="bf-form">
+    <div style="overflow-x: auto; overflow-y: hidden; text-align: center;"><table class="metric-table">
+      <tbody><tr>
+        <td>
+          <label class="radio-label">Imperial <span>(lbs. & inches) &nbsp;</span></label>
+          <input type="radio" name="system" value="imperial" checked="checked" tabindex="65">
+        </td>
+        <td>
+          <label class="radio-label">Metric <span>(kgs. & cm) &nbsp;</span></label>
+          <input type="radio" name="system" value="metric" tabindex="66">
+        </td>
+      </tr>
+    </tbody></table></div>
+    <hr width="100%" size="1" noshade="" style="border-top: 1px solid #ccc;">
+	<div style="overflow-x: auto; overflow-y: hidden; text-align: center; margin-bottom: 20px;"><table class="metric-table">
+      <tbody><tr>
+      
+        <td>
+          <button class="opacityClicked" name="gender" value="male" tabindex="67">Male <span> &nbsp;</span></button>
+         <!-- <input type="radio" name="gender" value="male" tabindex="68"> -->
+        </td>
+              
+        <td>
+          <button class="opacityDefault" name="gender" value="female" tabindex="68">Female <span> &nbsp;</span></button>
+         <!-- <input type="radio" name="gender" value="female" checked="checked" tabindex="67"> -->
+        </td>
+
+      </tr>
+    </tbody></table></div>    
+        <hr width="100%" size="1" noshade="" style="border-top: 1px solid #ccc;">
+
+    <div style="overflow-x: auto; overflow-y: hidden; text-align: center; ">
+    
+    <table class="form-table" style="width: 100%;">
+      <tbody class="tbody-side" style="width: 50%; float: left; padding-left: 5%; "><tr>
+        <td>
+          <label for="weight" class="block-label">Weight</label>
+        </td>
+        <td class="td-70">
+          <input type="number" name="weight" value="" id="weight" tabindex="69">
+        </td>
+      </tr>
+      </tbody>
+      <tbody class="tbody-side" style="width: 45%; float: left;">
+      <tr>
+        <td>
+          <label for="height" class="block-label">Height</label>
+        </td>
+
+        <td class="td-70">
+          <input type="number" name="height" id="height" value="" tabindex="70">
+        </td>
+      </tr> </tbody>
+            
+    </tbody></table></div>
+  
+   
+    <hr width="100%" size="1" noshade="" style="border-top: 1px solid #ccc;">
+   
+  <!-- Mens measurements -->
+
+	<div id="male-measurements" class="measurements" style="overflow-x: auto; overflow-y: hidden; text-align: center;"><table class="form-table">
+      <tbody><tr>
+        <td>
+          <label for="waist" class="block-label">Waist (at narrowest)</label>
+        </td>
+        <td class="td-70">
+          <input type="number" name="waist" value="" id="waist" tabindex="71">
+        </td>
+      </tr>
+      </tbody>
+      
+      <tbody><tr>
+        <td>
+          <label for="neck" class="block-label">Neck (at narrowest)</label>
+        </td>
+        <td class="td-70">
+          <input type="number" name="neck" value="" id="neck" tabindex="72">
+        </td>
+      </tr>
+      </tbody>
+            
+    </tbody></table></div>
+
+  
+   
+<!-- Women measurements (default) -->
+    
+    <div id="female-measurements" class="measurements" style="overflow-x: auto; overflow-y: hidden; text-align: center;"><table class="form-table">
+      <tbody><tr>
+        <td>
+          <label for="waist" class="block-label">Waist (at narrowest)</label>
+        </td>
+        <td class="td-70">
+          <input type="number" name="waist" value="" id="waist" tabindex="73">
+        </td>
+      </tr>
+      </tbody>
+      
+      <tbody>
+      <tr>
+        <td>
+          <label for="hip" class="block-label">Hip (at widest)</label>
+        </td>
+
+        <td class="td-70">
+          <input type="number" name="hip" id="hip" value="" tabindex="74">
+        </td>
+      </tr> 
+      </tbody>
+      
+      <tbody><tr>
+        <td>
+          <label for="neck" class="block-label">Neck (at narrowest)</label>
+        </td>
+        <td class="td-70">
+          <input type="number" name="neck" value="" id="neck" tabindex="75">
+        </td>
+      </tr>
+      </tbody>
+            
+    </tbody></table></div>
+    
+
+
+
+<!-- Results -->
+    
+    <hr width="100%" size="1" noshade="" style="border-top: 1px solid #ccc;">
+    
+    
+    <div style="overflow-x: auto; overflow-y: hidden; text-align: center;"><table class="bf-table">
+      <tbody><tr>
+        <td>Body Fat</td>
+        <td class="bf-result"></td>
+      </tr>
+      <tr>
+        <td>Fat Mass</td>
+        <td class="fm-result"></td>
+      </tr>
+      <tr>
+        <td>Lean Mass</td>
+        <td class="lm-result"></td>
+      </tr>
+
+      
+    </tbody></table></div>
+  </form>
+</strong></div>
+
+</div> <!-- end first section -->
+
+
+
+<!-- TDEE Calculator -->
+
+<div class="section">
+<div class="tdee-calculator"><strong>
+  <form class="tdee-form">
+  
+    <div style="overflow-x: auto; overflow-y: hidden; text-align: center;"><table class="metric-table" style="display:none;">
+      <tbody><tr>
+        <td>
+          <label class="radio-label">Imperial <span>(lbs.) &nbsp;</span></label>
+          <input type="radio" name="system" value="imperial" checked="checked" tabindex="78">
+        </td>
+        <td>
+          <label class="radio-label">Metric <span>(kgs.) &nbsp;</span></label>
+          <input type="radio" name="system" value="metric" tabindex="79">
+        </td>
+      </tr>
+    </tbody></table></div>
+    
+    <div style="overflow-x: auto; overflow-y: hidden; text-align: center;"><table class="form-table" style="display:none;">
+      <tbody><tr>
+        <td>
+          <label for="weight" class="block-label">Weight</label>
+        </td>
+        <td class="td-70">
+          <input type="number" name="weight" value="" id="weight" tabindex="80">
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <label for="body-fat">Body Fat Percentage<a href="http://www.muscleforlife.com/body-composition/" target="_blank" class="bf-link" id="link_568c3fc5dfe2a">(Click here to learn how to measure.)</a></label>
+        </td>
+        <td class="td-70">
+          <input type="number" name="body-fat" id="body-fat" value="" tabindex="81">
+        </td>
+      </tr>
+      
+   
+   
+    <div style="overflow-x: auto; overflow-y: hidden; text-align: center; width: 250px;"><table class="activity-select">
+      <tbody><tr>
+        <td>
+          <label for="activity-level" class="block-label">Activity Level</label>
+        </td>
+        <td class="select-td">
+          <select name="activity-level" id="activity-level" tabindex="82">
+            <option value="1.1" selected="selected">&lt; 1 hour exercise / wk</option>
+            <option value="1.2">1-3 hours exercise / wk</option>
+            <option value="1.35">4-6 hours exercise / wk</option>
+            <option value="1.45">6+ hours exercise / wk</option>
+            <option value="1">Custom</option>
+          </select>
+        </td>
+      </tr>
+    </tbody></table></div>
+    
+    <div style="overflow-x: auto; overflow-y: hidden; text-align: center;"><table class="form-table">    
+      <tbody>
+        <tr>
+          <td>
+            <label for="custom-multiplier" class="block-label">Activity Multiplier</label>
+          </td>
+          <td class="td-70">
+            <input type="number" id="custom-multiplier" step=".05" placeholder="1.1" min="1" value="1.1" tabindex="83">
+          </td>
+        </tr>
+      </tbody>
+    </table></div>
+    
+    <div style="overflow-x: auto; overflow-y: hidden; text-align: center;"><table class="tdee-table">
+      <tbody><tr>
+        <td>LBM</td>
+        <td class="lbm-result"></td>
+      </tr>
+      <tr>
+        <td>BMR</td>
+        <td class="bmr-result"></td>
+      </tr>
+      <tr>
+        <td>TDEE</td>
+        <td class="tdee-result"></td>
+      </tr>
+    </tbody></table></div>
+    
+  </form>
+</strong></div>
+
+</div> <!-- end 2nd section -->
+
+<!-- start 3rd section -->
+<div class="section" >
+
+<!-- 
+<div class="slide" data-anchor="deficit-level"> 
+<div class="tdee-calculator"><strong>
+  <form class="tdee-form">
+   
+    <div style="overflow-x: auto; overflow-y: hidden; text-align: center;"><table class="activity-select">
+      <tbody><tr>
+        <td>
+          <label for="deficit-level" class="block-label">Deficit Level</label>
+        </td>
+        <td class="select-td">
+          <select name="deficit-level" id="deficit-level" tabindex="90">
+            <option value="0.00">0 %</option>
+            <option value="0.05">5 %</option>
+            <option value="0.10">10 %</option>
+            <option value="0.15">15 %</option>
+            <option value="0.20" selected="selected">20 %</option>
+            <option value="0.25">25 %</option>       
+          </select>
+        </td>
+      </tr>
+    </tbody></table></div>
+ 
+    
+    <div style="overflow-x: auto; overflow-y: hidden; text-align: center;"><table class="tdee-table">
+      <tbody><tr>
+        <td>Deficit</td>
+        <td class="deficit-result"></td>
+      </tr>
+    </tbody></table></div>
+    
+  </form>
+</strong></div></div>
+
+
+
+<div class="slide" data-anchor="macros"> 
+-->
+
+<div class="tdee-macro-calc">
+    <form class="tdee-form" style="max-width: 600px; box-shadow: none;">
+      <table class="metric-table" style="display: none;">
+        <tr>
+          <td>
+            <label class="radio-label">Imperial <span>(lbs.) &nbsp;</span></label>
+            <input type="radio" name="system" value="imperial" checked="checked" tabindex="48" />
+          </td>
+          <td>
+            <label class="radio-label">Metric <span>(kgs.) &nbsp;</span></label>
+            <input type="radio" name="system" value="metric" tabindex="48" />
+          </td>
+        </tr>
+      </table>
+      <table class="form-table" style="display: none;">
+        <tr>
+          <td>
+            <label for="body-weight" class="block-label">Weight</label>
+          </td>
+          <td class="td-90">
+            <input type="number" name="body-weight" value="" id="body-weight" tabindex="49"/>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <label for="body-fat">Body Fat Percentage</label>
+          </td>
+          <td class="td-90">
+            <input type="number" name="body-fat" id="body-fat" value="" tabindex="50"/>
+          </td>
+        </tr>
+      </table>
+      <table class="activity-select" style="display: none;">
+        <tr>
+          <td>
+            <label for="activity-level" class="block-label">Activity Level</label>
+          </td>
+          <td class="select-td">
+            <select name="activity-level" id="activity-level" tabindex="51">
+              <option value="1.1" selected="selected">< 1 hour exercise per week</option>
+              <option value="1.2">1-3 hours exercise per week</option>
+              <option value="1.35">4-6 hours exercise per week</option>
+              <option value="1.45">6+ hours exercise per week</option>
+              <option value="1">Custom</option>
+            </select>
+          </td>
+        </tr>
+      </table>
+      <table class="form-table" style="display: none;">    
+        <tbody>
+          <tr>
+            <td>
+              <label for="custom-multiplier" class="block-label">Activity Multiplier</label>
+            </td>
+            <td class="td-90">
+              <input type="number" id="custom-multiplier" step=".05" placeholder="1.1" min="1" value="1.1" tabindex="52"/>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <table class="tdee-table" style="display: none;">
+        <tr>
+          <td>LBM</td>
+          <td class="lbm-result"></td>
+        </tr>
+        <tr>
+          <td>BMR</td>
+          <td class="bmr-result"></td>
+        </tr>
+        <tr>
+          <td>TDEE</td>
+          <td class="tdee-result"></td>
+        </tr>
+      </table>
+      <input type="hidden" min="10" value="" placeholder="Calories..." name="tdee" id="tdee" class="number-input"/>
+      <table class="form-table" style="width: 150%;">
+        <tr style="width: 100%;">
+          <td style="text-align: right; width: 50px; padding-right: 20px;"> 
+            <label for="presets" style="">
+              Presets
+              
+            </label>
+          </td>
+          <td class="td-90">
+            <select name="presets" id="presets" tabindex="53" style="height: 40px; width: 150px;"> 
+              <option value="none">None</option>
+              <option value="cut">Cut</option>
+              <option value="maintain">Maintain</option>
+              <option value="bulk">Bulk</option>
+            </select>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="label-td" style="text-align: left;" >
+            <label for="def-surp1">Deficit</label>
+            <input type="radio" name="def-surp" id="def-surp1" value="deficit" checked="checked" tabindex="54"/>
+            <label for="def-surp2">Surplus</label>
+            <input type="radio" name="def-surp" id="def-surp1" value="surplus" tabindex="54"/>
+          </td>
+          <td class="input-td">
+            <input style="width: 60px;"type="text" name="def-surp-percentage" value="0%" placeholder="Enter percentage" tabindex="55"/>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="label-td" style="text-align: left;">
+            <label for="cals-left">Total Calories</label>
+          </td>
+          <td class="input-td"><span id="cals-left" style="text-align: left; padding-left: 20px;">0</span></td>
+        </tr>
+      </table>
+      <table border="0" cellspacing="0" cellpadding="0" class="macro-bottom-table" style="border: 0 !important">
+        <tbody style="border: 0 !important">     
+          <tr>      
+            <td class="perc-td">
+              <label for="protein">Protein</label><span class="protein-perc"> 
+                <input type="text" value="0%" data-type="protein" tabindex="56" class="perc-input"/></span>
+            </td>
+            <td class="slider-td">
+              <div data-type="protein" data-cals="4" class="protein-slider"></div>
+            </td>
+            <td class="grams-td"><span class="protein-grams"> 
+                <input type="text" value="0g" data-type="protein" data-cals="4" tabindex="59" class="gram-input"/></span><span class="protein-calories">
+                0 kcal
+                </span></td>
+          </tr>
+          <tr>
+            <td class="perc-td">
+              <label for="carbs">Carbs </label><span class="carbs-perc">
+                <input type="text" value="0%" data-type="carbs" tabindex="57" class="perc-input"/></span>
+            </td>
+            <td class="slider-td">
+              <div data-type="carbs" data-cals="4" class="carbs-slider"></div>
+            </td>
+            <td class="grams-td"><span class="carbs-grams"> 
+                <input type="text" value="0g" data-type="carbs" data-cals="4" tabindex="60" class="gram-input"/></span><span class="carbs-calories">
+                0 kcal
+                </span></td>
+          </tr>
+          <tr>
+            <td class="perc-td">
+              <label for="fat">Fat</label><span class="fat-perc"> 
+                <input type="text" value="0%" data-type="fat" tabindex="58" class="perc-input"/></span>
+            </td>
+            <td class="slider-td">
+              <div data-type="fat" data-cals="9" class="fat-slider"></div>
+            </td>
+            <td class="grams-td"><span class="fat-grams"> 
+                <input type="text" value="0g" data-type="fat" data-cals="9" tabindex="61" class="gram-input"/></span><span class="fat-calories">
+                0 kcal
+                
+                </span></td>
+          </tr>
+        </tbody>
+      </table>
+    </form>
+  </div>
+
+<!-- </div> -->
+
+
+</div> <!-- end 3rd section -->
+
+<!-- 
+<div class="section">
+<div class="slide" data-anchor="surplus-level"> 
+<div class="tdee-calculator"><strong>
+  <form class="tdee-form">
+   
+    <div style="overflow-x: auto; overflow-y: hidden; text-align: center;"><table class="activity-select">
+      <tbody><tr>
+        <td>
+          <label for="surplus-level" class="block-label">Surplus Level</label>
+        </td>
+        <td class="select-td">
+          <select name="surplus-level" id="surplus-level" tabindex="90">
+            <option value="0.00">0 %</option>
+            <option value="0.05">5 %</option>
+            <option value="0.10" selected="selected">10 %</option>
+            <option value="0.15">15 %</option>
+            <option value="0.20">20 %</option>
+          </select>
+        </td>
+      </tr>
+    </tbody></table></div>
+ 
+    
+    <div style="overflow-x: auto; overflow-y: hidden; text-align: center;"><table class="tdee-table">
+      <tbody><tr>
+        <td>Surplus</td>
+        <td class="surplus-result"></td>
+      </tr>
+    </tbody></table></div>
+    
+  </form>
+</strong></div></div>
+
+<div class="slide" data-anchor="bmacros"> 
+<div class="tdee-calculator surplus-macros"><strong>
+  <form class="tdee-form">
+      
+  
+    <div style="overflow-x: auto; overflow-y: hidden; text-align: center;"><table class="tdee-table macro-table">
+      <tbody><tr>
+        <td class="perc-td">
+              <label for="protein">Protein</label><span class="protein-perc"> 
+                <input type="text" value="0%" data-type="protein" tabindex="117" class="perc-input"></span>
+        </td>
+        
+        <td class="select-td">
+          <div class="macro" name="protein" id="protein" tabindex="95"></div>
+        </td>
+        
+        <td class="grams-td">
+        <span class="protein-grams"> 
+                <input type="text" value="0g" data-type="protein" data-cals="4" tabindex="59" class="gram-input"></input>
+        </span>
+        <span class="protein-calories">888 kcal</span>
+        </td>
+        
+      </tr>
+      
+      
+      <tr>
+        <td class="perc-td">
+              <label for="fat">Fat</label><span class="fat-perc"> 
+                <input type="text" value="0%" data-type="fat" tabindex="119" class="perc-input"></span>
+        </td>
+        
+        <td class="select-td">
+          <div class="macro" name="fat" id="fat" tabindex="100"></div>
+        </td>
+
+        <td class="grams-td">
+        <span class="fat-grams"> 
+                <input type="text" value="0g" data-type="fat" data-cals="9" tabindex="59" class="gram-input"></input>
+        </span>
+        <span class="fat-calories">888 kcal</span>
+        </td>
+        
+      </tr>
+      
+      
+      <tr>
+        <td class="perc-td">
+              <label for="carbs">Carbs</label><span class="carbs-perc"> 
+                <input type="text" value="0%" data-type="carbs" tabindex="121" class="perc-input"></span>
+        </td>
+        
+        <td class="select-td">
+          <div class="macro" name="carbs" id="carbs" tabindex="105"></div>
+        </td>
+        
+        <td class="grams-td">
+        <span class="carbs-grams"> 
+                <input type="text" value="0g" data-type="carbs" data-cals="4" tabindex="59" class="gram-input"></input>
+        </span>
+        <span class="carbs-calories">888 kcal</span>
+        </td>
+        
+      </tr>
+      
+      
+    </tbody></table></div>
+  
+    </form>
+    </strong></div>
+</div>
+
+</div> <!-- end 4th section -->
+</div>
+
+
+<!-- USE PHP to get these in -->
+<script type='text/javascript' src='js/tdee-calculator.js'></script>
+<script type='text/javascript' src='js/bf-calculator.js'></script>
+<script type="text/javascript" src="js/jquery.fullPage.js"></script>
+
+<!-- FROM MFL -->
+<script type='text/javascript' src='http://www.muscleforlife.com/wp-content/plugins/custom-mfl/js/macro-jquery-ui.js?ver=1.0'></script>
+<script type='text/javascript' src='http://www.muscleforlife.com/wp-content/plugins/custom-mfl/js/jquery.ui.touch-punch.min.js?ver=1.0'></script>
+<script type='text/javascript' src='http://www.muscleforlife.com/wp-content/plugins/custom-mfl/js/mixcalc-dist.js?v=12&#038;ver=1.0'></script>
+
+	    
+
