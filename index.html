@@ -2,10 +2,6 @@
 
 <head>
 <title>BBGains.com: One Calculator for Bodyfat, Calories, and Macros.</title>
-<!-- JQuery -->
-
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/jquery-ui.min.js"></script>
 
 <!-- Design Scripts -->
 <script type="text/javascript" src="js/nouislider.min.js"></script>
@@ -42,7 +38,7 @@ $(document).ready(function() {
 
 
 function saveGenderInputs(gender, height, weight, system) {
-	
+
 	gender.height(height);
   	gender.weight(weight);
 	gender.system(system);
@@ -59,9 +55,9 @@ function saveAndSwap(userChoice) {
 	var height = $(".bf-calculator input[name='height']").val();
 	var weight = $(".bf-calculator #weight").val();
 	var system = $(".bf-calculator input[name='system']").val();
-	
+
   		if (userChoice == 'male'){
-  			
+
   			//save female weight height if entered and set male weight height if saved previous
   			if((height > 0) && (weight > 0)){
   				saveGenderInputs(female, height, weight, system);
@@ -76,7 +72,7 @@ function saveAndSwap(userChoice) {
   			}
   		}
   		else {
-  			
+
   			//save male weight height if entered and set female weight height if entered previous
   			if((height > 0) && (weight > 0)){
   				male.height($(".bf-calculator #height").val());
@@ -91,45 +87,45 @@ function saveAndSwap(userChoice) {
   			else {
   				$(".bf-calculator #height").val("");
   				$(".bf-calculator #weight").val("");
-  			}	
- 		} 	
- 		
- 		updateTDEE();	
- 		
- 			
+  			}
+ 		}
+
+ 		updateTDEE();
+
+
 }// end saveAndSwap
 
-	
+
 	    $(".bf-calculator button[name='gender']").click(function(event) {
-	    	
+
 	    	userChoice = $(this).val();
 	    	console.log(userChoice);
 	    	mElement = '#'+userChoice+'-measurements';// the measurement div we want to show
-	    	
+
 	    	$(this).fadeTo("slow", 1);
 	    	if($(this).val() == 'male'){
 	    		$(".bf-calculator button[value='female']").fadeTo("slow", 0.5);
 	    	}
 	    	else{ $(".bf-calculator button[value='male']").fadeTo("slow", 0.5); }
-	    	
-	    	if($(mElement).is(':hidden')){ 	
+
+	    	if($(mElement).is(':hidden')){
 
 	       	$('.measurements:visible').slideUp(200, function(){
 					saveAndSwap(userChoice);
 
 		    		$(mElement).slideDown(500);
 		    		updateBF();
-		    		
+
 	       	});
 			}
-	    	
+
 	    	event.preventDefault();
-	    	
+
 	    });// end click function
-	     
-	    
+
+
 	// initialize fullpage
-	
+
     $('#fullpage').fullpage({
         anchors:['bodyfat', 'tdee', 'macros'],
         //autoScrolling: false,
@@ -138,14 +134,14 @@ function saveAndSwap(userChoice) {
         //resize: true
 
     });
-    
-    
+
+
 	// initialize all sliders using nouislider
-    
-   
-   
+
+
+
 		$(".macro").each(function() {
-    		
+
     		if ($(this).attr("name") == "fat"){
 				noUiSlider.create(this, {
 					start: [ 20 ],
@@ -164,11 +160,11 @@ function saveAndSwap(userChoice) {
 						'max': [ 100 ]
 					}
 				});
-			
+
 			}
-      
+
       });
-      	
+
   //  pinch to zoom with fullpage.js
     var scale = 0.7; // initial-scale
     var r = 0.10;
@@ -178,13 +174,13 @@ function saveAndSwap(userChoice) {
         if(event.originalEvent.scale > 1) scale = scale < 1.2 ?  scale+r : 1.2 ;
         else scale = scale > 0.7 ? scale-r : 0.7 ;
 
-        $('meta[name=viewport]').attr('content', 'width=device-width, minimum-scale='+ scale.toFixed(2) +', maximum-scale='+ scale.toFixed(2) +', user-scalable=yes'); // 
+        $('meta[name=viewport]').attr('content', 'width=device-width, minimum-scale='+ scale.toFixed(2) +', maximum-scale='+ scale.toFixed(2) +', user-scalable=yes'); //
 
     });
-    
-    
-    
-      
+
+
+
+
 	});// END DOC READY
 
 </script>
@@ -216,23 +212,23 @@ function saveAndSwap(userChoice) {
     <hr width="100%" size="1" noshade="" style="border-top: 1px solid #ccc;">
 	<div style="overflow-x: auto; overflow-y: hidden; text-align: center; margin-bottom: 20px;"><table class="metric-table">
       <tbody><tr>
-      
+
         <td>
           <button class="opacityClicked" name="gender" value="male" tabindex="67">Male <span> &nbsp;</span></button>
          <!-- <input type="radio" name="gender" value="male" tabindex="68"> -->
         </td>
-              
+
         <td>
           <button class="opacityDefault" name="gender" value="female" tabindex="68">Female <span> &nbsp;</span></button>
          <!-- <input type="radio" name="gender" value="female" checked="checked" tabindex="67"> -->
         </td>
 
       </tr>
-    </tbody></table></div>    
+    </tbody></table></div>
         <hr width="100%" size="1" noshade="" style="border-top: 1px solid #ccc;">
 
     <div style="overflow-x: auto; overflow-y: hidden; text-align: center; ">
-    
+
     <table class="form-table" style="width: 100%;">
       <tbody class="tbody-side" style="width: 50%; float: left; padding-left: 5%; "><tr>
         <td>
@@ -253,12 +249,12 @@ function saveAndSwap(userChoice) {
           <input type="number" name="height" id="height" value="" tabindex="70">
         </td>
       </tr> </tbody>
-            
+
     </tbody></table></div>
-  
-   
+
+
     <hr width="100%" size="1" noshade="" style="border-top: 1px solid #ccc;">
-   
+
   <!-- Mens measurements -->
 
 	<div id="male-measurements" class="measurements" style="overflow-x: auto; overflow-y: hidden; text-align: center;"><table class="form-table">
@@ -271,7 +267,7 @@ function saveAndSwap(userChoice) {
         </td>
       </tr>
       </tbody>
-      
+
       <tbody><tr>
         <td>
           <label for="neck" class="block-label">Neck (at narrowest)</label>
@@ -281,13 +277,13 @@ function saveAndSwap(userChoice) {
         </td>
       </tr>
       </tbody>
-            
+
     </tbody></table></div>
 
-  
-   
+
+
 <!-- Women measurements (default) -->
-    
+
     <div id="female-measurements" class="measurements" style="overflow-x: auto; overflow-y: hidden; text-align: center;"><table class="form-table">
       <tbody><tr>
         <td>
@@ -298,7 +294,7 @@ function saveAndSwap(userChoice) {
         </td>
       </tr>
       </tbody>
-      
+
       <tbody>
       <tr>
         <td>
@@ -308,9 +304,9 @@ function saveAndSwap(userChoice) {
         <td class="td-70">
           <input type="number" name="hip" id="hip" value="" tabindex="74">
         </td>
-      </tr> 
+      </tr>
       </tbody>
-      
+
       <tbody><tr>
         <td>
           <label for="neck" class="block-label">Neck (at narrowest)</label>
@@ -320,17 +316,17 @@ function saveAndSwap(userChoice) {
         </td>
       </tr>
       </tbody>
-            
+
     </tbody></table></div>
-    
+
 
 
 
 <!-- Results -->
-    
+
     <hr width="100%" size="1" noshade="" style="border-top: 1px solid #ccc;">
-    
-    
+
+
     <div style="overflow-x: auto; overflow-y: hidden; text-align: center;"><table class="bf-table">
       <tbody><tr>
         <td>Body Fat</td>
@@ -345,7 +341,7 @@ function saveAndSwap(userChoice) {
         <td class="lm-result"></td>
       </tr>
 
-      
+
     </tbody></table></div>
   </form>
 </strong></div>
@@ -359,7 +355,7 @@ function saveAndSwap(userChoice) {
 <div class="section">
 <div class="tdee-calculator"><strong>
   <form class="tdee-form">
-  
+
     <div style="overflow-x: auto; overflow-y: hidden; text-align: center;"><table class="metric-table" style="display:none;">
       <tbody><tr>
         <td>
@@ -372,7 +368,7 @@ function saveAndSwap(userChoice) {
         </td>
       </tr>
     </tbody></table></div>
-    
+
     <div style="overflow-x: auto; overflow-y: hidden; text-align: center;"><table class="form-table" style="display:none;">
       <tbody><tr>
         <td>
@@ -390,9 +386,9 @@ function saveAndSwap(userChoice) {
           <input type="number" name="body-fat" id="body-fat" value="" tabindex="81">
         </td>
       </tr>
-      
-   
-   
+
+
+
     <div style="overflow-x: auto; overflow-y: hidden; text-align: center; width: 250px;"><table class="activity-select">
       <tbody><tr>
         <td>
@@ -409,8 +405,8 @@ function saveAndSwap(userChoice) {
         </td>
       </tr>
     </tbody></table></div>
-    
-    <div style="overflow-x: auto; overflow-y: hidden; text-align: center;"><table class="form-table">    
+
+    <div style="overflow-x: auto; overflow-y: hidden; text-align: center;"><table class="form-table">
       <tbody>
         <tr>
           <td>
@@ -422,7 +418,7 @@ function saveAndSwap(userChoice) {
         </tr>
       </tbody>
     </table></div>
-    
+
     <div style="overflow-x: auto; overflow-y: hidden; text-align: center;"><table class="tdee-table">
       <tbody><tr>
         <td>LBM</td>
@@ -437,7 +433,7 @@ function saveAndSwap(userChoice) {
         <td class="tdee-result"></td>
       </tr>
     </tbody></table></div>
-    
+
   </form>
 </strong></div>
 
@@ -446,11 +442,11 @@ function saveAndSwap(userChoice) {
 <!-- start 3rd section -->
 <div class="section" >
 
-<!-- 
-<div class="slide" data-anchor="deficit-level"> 
+<!--
+<div class="slide" data-anchor="deficit-level">
 <div class="tdee-calculator"><strong>
   <form class="tdee-form">
-   
+
     <div style="overflow-x: auto; overflow-y: hidden; text-align: center;"><table class="activity-select">
       <tbody><tr>
         <td>
@@ -463,26 +459,26 @@ function saveAndSwap(userChoice) {
             <option value="0.10">10 %</option>
             <option value="0.15">15 %</option>
             <option value="0.20" selected="selected">20 %</option>
-            <option value="0.25">25 %</option>       
+            <option value="0.25">25 %</option>
           </select>
         </td>
       </tr>
     </tbody></table></div>
- 
-    
+
+
     <div style="overflow-x: auto; overflow-y: hidden; text-align: center;"><table class="tdee-table">
       <tbody><tr>
         <td>Deficit</td>
         <td class="deficit-result"></td>
       </tr>
     </tbody></table></div>
-    
+
   </form>
 </strong></div></div>
 
 
 
-<div class="slide" data-anchor="macros"> 
+<div class="slide" data-anchor="macros">
 -->
 
 <div class="tdee-macro-calc">
@@ -533,7 +529,7 @@ function saveAndSwap(userChoice) {
           </td>
         </tr>
       </table>
-      <table class="form-table" style="display: none;">    
+      <table class="form-table" style="display: none;">
         <tbody>
           <tr>
             <td>
@@ -562,14 +558,14 @@ function saveAndSwap(userChoice) {
       <input type="hidden" min="10" value="" placeholder="Calories..." name="tdee" id="tdee" class="number-input"/>
       <table class="form-table" style="width: 150%;">
         <tr style="width: 100%;">
-          <td style="text-align: right; width: 50px; padding-right: 20px;"> 
+          <td style="text-align: right; width: 50px; padding-right: 20px;">
             <label for="presets" style="">
               Presets
-              
+
             </label>
           </td>
           <td class="td-90">
-            <select name="presets" id="presets" tabindex="53" style="height: 40px; width: 150px;"> 
+            <select name="presets" id="presets" tabindex="53" style="height: 40px; width: 150px;">
               <option value="none">None</option>
               <option value="cut">Cut</option>
               <option value="maintain">Maintain</option>
@@ -598,16 +594,16 @@ function saveAndSwap(userChoice) {
         </tr>
       </table>
       <table border="0" cellspacing="0" cellpadding="0" class="macro-bottom-table" style="border: 0 !important">
-        <tbody style="border: 0 !important">     
-          <tr>      
+        <tbody style="border: 0 !important">
+          <tr>
             <td class="perc-td">
-              <label for="protein">Protein</label><span class="protein-perc"> 
+              <label for="protein">Protein</label><span class="protein-perc">
                 <input type="text" value="0%" data-type="protein" tabindex="56" class="perc-input"/></span>
             </td>
             <td class="slider-td">
               <div data-type="protein" data-cals="4" class="protein-slider"></div>
             </td>
-            <td class="grams-td"><span class="protein-grams"> 
+            <td class="grams-td"><span class="protein-grams">
                 <input type="text" value="0g" data-type="protein" data-cals="4" tabindex="59" class="gram-input"/></span><span class="protein-calories">
                 0 kcal
                 </span></td>
@@ -620,23 +616,23 @@ function saveAndSwap(userChoice) {
             <td class="slider-td">
               <div data-type="carbs" data-cals="4" class="carbs-slider"></div>
             </td>
-            <td class="grams-td"><span class="carbs-grams"> 
+            <td class="grams-td"><span class="carbs-grams">
                 <input type="text" value="0g" data-type="carbs" data-cals="4" tabindex="60" class="gram-input"/></span><span class="carbs-calories">
                 0 kcal
                 </span></td>
           </tr>
           <tr>
             <td class="perc-td">
-              <label for="fat">Fat</label><span class="fat-perc"> 
+              <label for="fat">Fat</label><span class="fat-perc">
                 <input type="text" value="0%" data-type="fat" tabindex="58" class="perc-input"/></span>
             </td>
             <td class="slider-td">
               <div data-type="fat" data-cals="9" class="fat-slider"></div>
             </td>
-            <td class="grams-td"><span class="fat-grams"> 
+            <td class="grams-td"><span class="fat-grams">
                 <input type="text" value="0g" data-type="fat" data-cals="9" tabindex="61" class="gram-input"/></span><span class="fat-calories">
                 0 kcal
-                
+
                 </span></td>
           </tr>
         </tbody>
@@ -649,12 +645,12 @@ function saveAndSwap(userChoice) {
 
 </div> <!-- end 3rd section -->
 
-<!-- 
+<!--
 <div class="section">
-<div class="slide" data-anchor="surplus-level"> 
+<div class="slide" data-anchor="surplus-level">
 <div class="tdee-calculator"><strong>
   <form class="tdee-form">
-   
+
     <div style="overflow-x: auto; overflow-y: hidden; text-align: center;"><table class="activity-select">
       <tbody><tr>
         <td>
@@ -671,86 +667,86 @@ function saveAndSwap(userChoice) {
         </td>
       </tr>
     </tbody></table></div>
- 
-    
+
+
     <div style="overflow-x: auto; overflow-y: hidden; text-align: center;"><table class="tdee-table">
       <tbody><tr>
         <td>Surplus</td>
         <td class="surplus-result"></td>
       </tr>
     </tbody></table></div>
-    
+
   </form>
 </strong></div></div>
 
-<div class="slide" data-anchor="bmacros"> 
+<div class="slide" data-anchor="bmacros">
 <div class="tdee-calculator surplus-macros"><strong>
   <form class="tdee-form">
-      
-  
+
+
     <div style="overflow-x: auto; overflow-y: hidden; text-align: center;"><table class="tdee-table macro-table">
       <tbody><tr>
         <td class="perc-td">
-              <label for="protein">Protein</label><span class="protein-perc"> 
+              <label for="protein">Protein</label><span class="protein-perc">
                 <input type="text" value="0%" data-type="protein" tabindex="117" class="perc-input"></span>
         </td>
-        
+
         <td class="select-td">
           <div class="macro" name="protein" id="protein" tabindex="95"></div>
         </td>
-        
+
         <td class="grams-td">
-        <span class="protein-grams"> 
+        <span class="protein-grams">
                 <input type="text" value="0g" data-type="protein" data-cals="4" tabindex="59" class="gram-input"></input>
         </span>
         <span class="protein-calories">888 kcal</span>
         </td>
-        
+
       </tr>
-      
-      
+
+
       <tr>
         <td class="perc-td">
-              <label for="fat">Fat</label><span class="fat-perc"> 
+              <label for="fat">Fat</label><span class="fat-perc">
                 <input type="text" value="0%" data-type="fat" tabindex="119" class="perc-input"></span>
         </td>
-        
+
         <td class="select-td">
           <div class="macro" name="fat" id="fat" tabindex="100"></div>
         </td>
 
         <td class="grams-td">
-        <span class="fat-grams"> 
+        <span class="fat-grams">
                 <input type="text" value="0g" data-type="fat" data-cals="9" tabindex="59" class="gram-input"></input>
         </span>
         <span class="fat-calories">888 kcal</span>
         </td>
-        
+
       </tr>
-      
-      
+
+
       <tr>
         <td class="perc-td">
-              <label for="carbs">Carbs</label><span class="carbs-perc"> 
+              <label for="carbs">Carbs</label><span class="carbs-perc">
                 <input type="text" value="0%" data-type="carbs" tabindex="121" class="perc-input"></span>
         </td>
-        
+
         <td class="select-td">
           <div class="macro" name="carbs" id="carbs" tabindex="105"></div>
         </td>
-        
+
         <td class="grams-td">
-        <span class="carbs-grams"> 
+        <span class="carbs-grams">
                 <input type="text" value="0g" data-type="carbs" data-cals="4" tabindex="59" class="gram-input"></input>
         </span>
         <span class="carbs-calories">888 kcal</span>
         </td>
-        
+
       </tr>
-      
-      
+
+
     </tbody></table></div>
-  
+
     </form>
     </strong></div>
 </div>
@@ -768,6 +764,3 @@ function saveAndSwap(userChoice) {
 <script type='text/javascript' src='http://www.muscleforlife.com/wp-content/plugins/custom-mfl/js/macro-jquery-ui.js?ver=1.0'></script>
 <script type='text/javascript' src='http://www.muscleforlife.com/wp-content/plugins/custom-mfl/js/jquery.ui.touch-punch.min.js?ver=1.0'></script>
 <script type='text/javascript' src='http://www.muscleforlife.com/wp-content/plugins/custom-mfl/js/mixcalc-dist.js?v=12&#038;ver=1.0'></script>
-
-	    
-
