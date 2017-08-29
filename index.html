@@ -10,6 +10,9 @@
 
 <script type="text/javascript" src="http://www.muscleforlife.com/wp-content/themes/mfl/theme/javascript/jquery-latest.min.js"></script>
 
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
 
 <!-- Stylesheets -->
 <link rel='stylesheet' id='mfl-macro-jquery-ui-styles-css'  href='http://www.muscleforlife.com/wp-content/plugins/custom-mfl/css/macro-jquery-ui.min.css?v=12' type='text/css' media='all' />
@@ -99,7 +102,7 @@ function saveAndSwap(userChoice) {
 	    $(".bf-calculator button[name='gender']").click(function(event) {
 
 	    	userChoice = $(this).val();
-	    	console.log(userChoice);
+	    	//console.log(userChoice);
 	    	mElement = '#'+userChoice+'-measurements';// the measurement div we want to show
 
 	    	$(this).fadeTo("slow", 1);
@@ -126,14 +129,14 @@ function saveAndSwap(userChoice) {
 
 	// initialize fullpage
 
-    $('#fullpage').fullpage({
+  /*  $('#fullpage').fullpage({
         anchors:['bodyfat', 'tdee', 'macros'],
         //autoScrolling: false,
         controlArrows: false,
         normalScrollElements: ".macro"
         //resize: true
 
-    });
+    }); */
 
 
 	// initialize all sliders using nouislider
@@ -193,6 +196,13 @@ function saveAndSwap(userChoice) {
 
 
 <div id="fullpage">
+
+<div class='container '>
+
+<div class="row">
+
+<div class='col-md-5'>
+
 
 <div class="section">
 <div class="bf-calculator"><strong>
@@ -348,7 +358,9 @@ function saveAndSwap(userChoice) {
 
 </div> <!-- end first section -->
 
+</div>
 
+<div class='col-md-7'>
 
 <!-- TDEE Calculator -->
 
@@ -438,48 +450,14 @@ function saveAndSwap(userChoice) {
 </strong></div>
 
 </div> <!-- end 2nd section -->
+</div>
+
+
+<div class='col-md-5'>
 
 <!-- start 3rd section -->
 <div class="section" >
 
-<!--
-<div class="slide" data-anchor="deficit-level">
-<div class="tdee-calculator"><strong>
-  <form class="tdee-form">
-
-    <div style="overflow-x: auto; overflow-y: hidden; text-align: center;"><table class="activity-select">
-      <tbody><tr>
-        <td>
-          <label for="deficit-level" class="block-label">Deficit Level</label>
-        </td>
-        <td class="select-td">
-          <select name="deficit-level" id="deficit-level" tabindex="90">
-            <option value="0.00">0 %</option>
-            <option value="0.05">5 %</option>
-            <option value="0.10">10 %</option>
-            <option value="0.15">15 %</option>
-            <option value="0.20" selected="selected">20 %</option>
-            <option value="0.25">25 %</option>
-          </select>
-        </td>
-      </tr>
-    </tbody></table></div>
-
-
-    <div style="overflow-x: auto; overflow-y: hidden; text-align: center;"><table class="tdee-table">
-      <tbody><tr>
-        <td>Deficit</td>
-        <td class="deficit-result"></td>
-      </tr>
-    </tbody></table></div>
-
-  </form>
-</strong></div></div>
-
-
-
-<div class="slide" data-anchor="macros">
--->
 
 <div class="tdee-macro-calc">
     <form class="tdee-form" style="max-width: 600px; box-shadow: none;">
@@ -644,123 +622,22 @@ function saveAndSwap(userChoice) {
 
 
 </div> <!-- end 3rd section -->
-
-<!--
-<div class="section">
-<div class="slide" data-anchor="surplus-level">
-<div class="tdee-calculator"><strong>
-  <form class="tdee-form">
-
-    <div style="overflow-x: auto; overflow-y: hidden; text-align: center;"><table class="activity-select">
-      <tbody><tr>
-        <td>
-          <label for="surplus-level" class="block-label">Surplus Level</label>
-        </td>
-        <td class="select-td">
-          <select name="surplus-level" id="surplus-level" tabindex="90">
-            <option value="0.00">0 %</option>
-            <option value="0.05">5 %</option>
-            <option value="0.10" selected="selected">10 %</option>
-            <option value="0.15">15 %</option>
-            <option value="0.20">20 %</option>
-          </select>
-        </td>
-      </tr>
-    </tbody></table></div>
-
-
-    <div style="overflow-x: auto; overflow-y: hidden; text-align: center;"><table class="tdee-table">
-      <tbody><tr>
-        <td>Surplus</td>
-        <td class="surplus-result"></td>
-      </tr>
-    </tbody></table></div>
-
-  </form>
-</strong></div></div>
-
-<div class="slide" data-anchor="bmacros">
-<div class="tdee-calculator surplus-macros"><strong>
-  <form class="tdee-form">
-
-
-    <div style="overflow-x: auto; overflow-y: hidden; text-align: center;"><table class="tdee-table macro-table">
-      <tbody><tr>
-        <td class="perc-td">
-              <label for="protein">Protein</label><span class="protein-perc">
-                <input type="text" value="0%" data-type="protein" tabindex="117" class="perc-input"></span>
-        </td>
-
-        <td class="select-td">
-          <div class="macro" name="protein" id="protein" tabindex="95"></div>
-        </td>
-
-        <td class="grams-td">
-        <span class="protein-grams">
-                <input type="text" value="0g" data-type="protein" data-cals="4" tabindex="59" class="gram-input"></input>
-        </span>
-        <span class="protein-calories">888 kcal</span>
-        </td>
-
-      </tr>
-
-
-      <tr>
-        <td class="perc-td">
-              <label for="fat">Fat</label><span class="fat-perc">
-                <input type="text" value="0%" data-type="fat" tabindex="119" class="perc-input"></span>
-        </td>
-
-        <td class="select-td">
-          <div class="macro" name="fat" id="fat" tabindex="100"></div>
-        </td>
-
-        <td class="grams-td">
-        <span class="fat-grams">
-                <input type="text" value="0g" data-type="fat" data-cals="9" tabindex="59" class="gram-input"></input>
-        </span>
-        <span class="fat-calories">888 kcal</span>
-        </td>
-
-      </tr>
-
-
-      <tr>
-        <td class="perc-td">
-              <label for="carbs">Carbs</label><span class="carbs-perc">
-                <input type="text" value="0%" data-type="carbs" tabindex="121" class="perc-input"></span>
-        </td>
-
-        <td class="select-td">
-          <div class="macro" name="carbs" id="carbs" tabindex="105"></div>
-        </td>
-
-        <td class="grams-td">
-        <span class="carbs-grams">
-                <input type="text" value="0g" data-type="carbs" data-cals="4" tabindex="59" class="gram-input"></input>
-        </span>
-        <span class="carbs-calories">888 kcal</span>
-        </td>
-
-      </tr>
-
-
-    </tbody></table></div>
-
-    </form>
-    </strong></div>
+</div>
+</div>
 </div>
 
-</div> <!-- end 4th section -->
 </div>
 
 
 <!-- USE PHP to get these in -->
 <script type='text/javascript' src='js/tdee-calculator.js'></script>
 <script type='text/javascript' src='js/bf-calculator.js'></script>
-<script type="text/javascript" src="js/jquery.fullPage.js"></script>
+<!-- <script type="text/javascript" src="js/jquery.fullPage.js"></script> -->
 
 <!-- FROM MFL -->
 <script type='text/javascript' src='http://www.muscleforlife.com/wp-content/plugins/custom-mfl/js/macro-jquery-ui.js?ver=1.0'></script>
 <script type='text/javascript' src='http://www.muscleforlife.com/wp-content/plugins/custom-mfl/js/jquery.ui.touch-punch.min.js?ver=1.0'></script>
 <script type='text/javascript' src='http://www.muscleforlife.com/wp-content/plugins/custom-mfl/js/mixcalc-dist.js?v=12&#038;ver=1.0'></script>
+
+</body>
+</html>
